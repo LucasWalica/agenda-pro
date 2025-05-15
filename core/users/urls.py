@@ -6,7 +6,8 @@ from .views import (
     BusinessUpdateView,
     ClientListView,
     LogoutView,
-    UserCreateView
+    UserCreateView, 
+    LoginView
 )
 
 urlpatterns = [
@@ -16,5 +17,6 @@ urlpatterns = [
     path("busines/update/", BusinessUpdateView.as_view()),
     path('busines/client/list/', ClientListView.as_view()),
     path("logout/", LogoutView.as_view()),
-    path('register/', UserCreateView.as_view())
+    path('register/', UserCreateView.as_view()),
+    path('login/', LoginView.as_view())
 ]

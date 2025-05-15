@@ -1,7 +1,8 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.models import Token
-from .models import User, BusinessProfile
+from .models import BusinessProfile
+from django.contrib.auth.models import User 
 from .serializers import UserSerializer, BusinessProfileSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
@@ -18,6 +19,7 @@ class UserCreateView(generics.CreateAPIView):
     
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+
         serializer.is_valid(raise_exception=True)
 
         user = serializer.save()
@@ -36,25 +38,29 @@ class UserCreateView(generics.CreateAPIView):
     
 
 #login 
+
 class LoginView(APIView):
     permission_classes = [AllowAny]
+
     def post(self, request, *args, **kwargs):
         email = request.data.get("email")
         password = request.data.get("password")
 
-        user = authenticate(email=email, password=password)
+        # Importante: authenticate espera username, por eso ponemos email en username
+        user = authenticate(username=email, password=password)
 
         if user is not None:
             token, created = Token.objects.get_or_create(user=user)
             return Response({
-                "token":token.key,
+                "token": token.key,
                 "user": {
                     "id": user.id,
                     "email": user.email,
-                },
+                }
             }, status=200)
         else:
             return Response({"error": "Invalid credentials"}, status=401)
+
         
 
 #logout 
@@ -116,10 +122,17 @@ class BusinessUpdateView(generics.UpdateAPIView):
 
 
 
-
+# por ahora solo puedes manejar un negocio
 class BusinessPostView(generics.CreateAPIView):
     parser_classes =  [JSONParser]
     permission_classes = [IsAuthenticated]
     queryset = BusinessProfile.objects.all() 
     serializer_class = BusinessProfileSerializer
+
+    def create(self, request, *args, **kwargs):
+        user = request.user 
+        busines = BusinessProfile.objects.filter(user=user)
+        if busines:
+            raise Exception("Ya tienes creado un negocio")
+        return super().create(request, *args, **kwargs)
 

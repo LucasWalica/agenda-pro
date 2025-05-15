@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-xiuh1k&pxva8u-k*-m5pq)vkeejcgnz*&67f33*(@l*5*4lnc9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -127,8 +127,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-AUTH_USER_MODEL = 'users.User'
-
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -141,3 +139,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
 }
+
+AUTHENTICATION_BACKENDS = [
+    'users.backends.EmailBackend',   # la ruta donde pusiste el backend
+    'django.contrib.auth.backends.ModelBackend',  # para login normal también
+]
