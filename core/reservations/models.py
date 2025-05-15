@@ -1,6 +1,6 @@
 from django.db import models
 from users.models import User, BusinessProfile
-from reservations.models import Service
+from offers.models import Service
 # Create your models here.
 
 

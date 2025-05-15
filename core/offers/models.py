@@ -6,7 +6,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 class Service(models.Model):
     fkBusiness = models.ForeignKey(BusinessProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=150)
-    price = models.FloatField(validators=MinValueValidator(5.0))
+    price = models.FloatField(validators=[MinValueValidator(5)])
     description = models.TextField(max_length=300, null=False)
     duration = models.DurationField()
     

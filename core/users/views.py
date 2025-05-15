@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import JSONParser
+from reservations.models import Reservation
 
 class UserCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -72,8 +73,15 @@ class ClientListView(generics.ListAPIView):
     queryset = User.objects.all() 
     serializer_class = UserSerializer
 
-    #def get_queryset(self):
-        # need to get all the clients from a business
+    def get_queryset(self):
+        user = self.request.user
+        busines = BusinessProfile.objects.filter(user=user)
+        if not busines:
+            return User.objects.none()
+        reservations = Reservation.objects.filter(fkBusiness=busines)
+        client_ids = reservations.values_list('fkClient__id', flat=True).distinct()
+        clients = User.objects.filter(id__in=client_ids)
+        return clients
 
 class BusinessDetailView(generics.RetrieveAPIView):
     parser_classes =  [JSONParser]
@@ -83,6 +91,7 @@ class BusinessDetailView(generics.RetrieveAPIView):
     lookup_field = "id"
 
 
+# maybe add a limiter in radius via coordinates but this later
 class BusinessListView(generics.ListAPIView):
     parser_classes =  [JSONParser]
     permission_classes = [IsAuthenticated]
@@ -95,6 +104,17 @@ class BusinessUpdateView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = BusinessProfile.objects.all() 
     serializer_class = BusinessProfileSerializer
+    lookup_field = "id"
+
+    def update(self, request, *args, **kwargs):
+        user = self.request.user 
+        business = self.get_object()
+        if business.user != user:
+            raise PermissionDenied("No tienes permido para modificar estos datos")
+        return super().update(request, *args, **kwargs)
+    
+
+
 
 
 class BusinessPostView(generics.CreateAPIView):
