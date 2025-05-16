@@ -1,0 +1,35 @@
+
+pantallas flutter => 
+
+     User	
+	logoin/register
+		listas de servicios
+			detail de servicio y sus comentarios 
+				gestionar cita para sericio (reservar)	
+					detalle de reserva
+		lista de negocios 
+			negocio detail => con todos sus servicios 
+		lista de sus reservas
+			vista de detalle de reserva 
+				cancelar reserva 
+	
+		notificacionPush al completar servicio o volver a entrar en la app
+			valorar servicio
+
+		Crear negocio (en fases posteriores cercionarse de que es un negocio legitimo)
+			vista de detalle de tu negocio 
+				update / delete (gestionar horario, etc...)
+			ver tus servicios
+				borrar servicio
+				updatear servicio 
+				añadir servicios 
+				ver comentarios de servicios 
+ 
+			añadir cita en un periodo de tiempo (esta funcionalidad tiene que ser como maximo 3 clicks)
+			desde business owner detail 
+				scheduler
+				
+
+
+		
+				
